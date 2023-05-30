@@ -11,10 +11,10 @@ const user = {
 }
 
 
-// app.use('/', express.static('views/pages'))
+app.use('/', express.static('views/pages'))
 app
     .get('/', (req, res) => {
-        res.render("pages/index", {
+        res.render("pages", {
             user
         })
     })
