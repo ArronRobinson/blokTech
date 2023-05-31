@@ -1,0 +1,11 @@
+include ../partials/header.pug
+
+main
+    h1 Sign up
+    form#form_Login(action="/signup", method="post")
+        input#txt_email(type="email", name="email", placeholder="alice@gmail.com", required)
+        input#txt_password(type="password", name="password", placeholder='your super secure password', required)
+        input(type="submit", value="Sign up")
+
+footer
+    // Footer content goes here
