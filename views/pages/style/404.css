@@ -3,11 +3,3 @@ body {
     height: 100%;
     background: #000 url("../images/404star.jpg") no-repeat  fixed center;
 }
-
-/* .bg {
-    background-image: url("../images/404star.jpg");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-} */
