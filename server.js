@@ -3,22 +3,14 @@ const app = express();
 const port = 3000;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv')
+dotenv.config()
+const {
+    User,
+    connect
+} = require("./database")
 
-const Schema = mongoose.Schema;
-const userSchema = new Schema({
-    name: { type: String, required: true },
-
-
-
-
-    hobby: { type: String, required: true },
- 
- 
- 
- 
-    age: { type: Number, required: true },
-})
-
+connect()
 app.set('view engine', 'pug')
 
 const user = {
@@ -35,9 +27,13 @@ app
     .get('/signup', (req, res) => {
         res.render('pages/signup', { title: 'Hey', message: 'Hello there!' })
       })
-    .post('/signup', (req, res) => {
+    .post('/signup', async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
+        const user = new User({
+            email, password
+        })
+        await user.save()
         console.log(email, password)
         res.status(200).send('yoooo')
     })
