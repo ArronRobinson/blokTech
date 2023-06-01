@@ -20,9 +20,25 @@ app.set('view engine', 'pug')
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/', express.static('views/pages'))
+app.use(
+    (req, res, next) => {
+        const token = req.cookies.jwt
+        if(!token) {
+           return next()
+        }
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ error: 'nooooo'});
+            }
+
+            req.user = decoded;
+            next();
+        })
+    }
+)
 app
     .get('/', (req, res) => {
-        res.render('pages', { title: 'Hey', message: 'Hello there!'})
+        res.render('pages', { title: 'Hey', message: 'Hello there!', user: req.user})
     })
     .get('/signup', (req, res) => {
         res.render('pages/signup')
@@ -60,8 +76,7 @@ app
                 const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
                 res.cookie('jwt', token, { httpOnly: true });
-
-                res.json({ message: 'Login successful' });
+                res.redirect('/');
             } else {
                 res.json({ message: 'Get outta here' });
             }

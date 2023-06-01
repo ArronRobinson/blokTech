@@ -4,3 +4,5 @@ html
     body 
         include ../partials/header.pug
         h1= message
+        if user 
+            p= user.email
