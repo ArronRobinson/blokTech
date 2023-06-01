@@ -4,7 +4,8 @@ const uri = process.env.MONGO_URL;
 
 const userSchema = new Schema({
   email: { type: String, required: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  username: { type: String, required: false}
 });
 
 const User = mongoose.model('User', userSchema);
