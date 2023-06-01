@@ -3,6 +3,6 @@ html
         title= title
     body 
         include ../partials/header.pug
-        h1= message
-        if user 
-            p= user.email
+        if user
+            h1 Hello there #{user.firstname}
+    h1 Hello, log in or sign up to creat a new account!
