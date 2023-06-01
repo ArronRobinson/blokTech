@@ -55,7 +55,7 @@ app
         // Handle user signup
         const email = req.body.email;
         const plainPassword = req.body.password;
-        const firstname = req.body.firstname;
+        const username = req.body.username;
 
         bcrypt.hash(plainPassword, 10, async (err, hashedPassword) => {
             if (err) {
@@ -64,25 +64,27 @@ app
             }
             const user = new User({
                 email,
-                firstname,
+                username,
                 password: hashedPassword
             });
             await user.save();
-            res.redirect('/login');
+            res.redirect('/');
         });
     })
     .post('/login', async (req, res) => {
         // Handle user login
         try {
-            const firstname = req.body.firstname;
+            const usernameOrEmail = req.body.username;
             const plainPassword = req.body.password;
-            const user = await User.findOne({ firstname });
+            const user = await User.findOne({
+                $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+            });
             if (!user) {
                 return res.json({ message: 'who dis?' });
             }
             const correctPassword = await bcrypt.compare(plainPassword, user.password);
             if (correctPassword) {
-                const token = jwt.sign({ firstname }, process.env.SECRET_KEY, { expiresIn: '1h' });
+                const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 res.cookie('jwt', token, { httpOnly: true });
                 res.redirect('/');
             } else {
@@ -95,6 +97,6 @@ app
     })
     .use((req, res) => {
         // 404 page
-        res.status(404).sendFile(__dirname + '/views/pages/404.html');
+        res.status(404).sendFile(__dirname + '/views/pages/404.pug');
     })
     .listen(port);

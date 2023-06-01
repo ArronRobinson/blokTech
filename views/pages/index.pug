@@ -3,6 +3,7 @@ html
         title= title
     body 
         include ../partials/header.pug
-        if user
-            h1 Hello there #{user.firstname}
-    h1 Hello, log in or sign up to creat a new account!
+        if !user
+            h1 Hello, log in or sign up to creat a new account!
+        else
+            h1 Hello there #{user.username}
