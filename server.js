@@ -41,10 +41,7 @@ app.use((req, res, next) => {
 app
     .get('/', async (req, res) => {
         try {
-            // Fetch all movies from the database
             const movies = await Movie.find();
-
-            // Render the index page and pass the movies data to the template
             res.render('pages/index', { title: 'home', user: req.user, movies });
         } catch (error) {
             console.error('Error fetching movies:', error);
@@ -66,33 +63,64 @@ app
         const email = req.body.email;
         const plainPassword = req.body.password;
         const username = req.body.username;
-
-        bcrypt.hash(plainPassword, 10, async (err, hashedPassword) => {
-            if (err) {
-                console.error('Error hashing password:', err);
-                return res.status(500).send('nope');
-            }
-            const user = new User({
-                email,
-                username,
-                password: hashedPassword
+    
+        try {
+            const existingUser = await User.findOne({
+                $or: [{ email: email }, { username: username }]
             });
-            await user.save();
-            res.redirect('/');
-        });
+    
+            if (existingUser) {
+                return res.json({ message: 'User already exists' });
+            }
+    
+            bcrypt.hash(plainPassword, 10, async (err, hashedPassword) => {
+                if (err) {
+                    console.error('Error hashing password:', err);
+                    return res.status(500).send('nope');
+                }
+                const user = new User({
+                    email,
+                    username,
+                    password: hashedPassword
+                });
+    
+                await user.save();
+    
+                const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '1h' });
+                res.cookie('jwt', token, { httpOnly: true });
+                res.redirect('/');
+            });
+        } catch (error) {
+            console.error('Error signing up:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
     })
     .post('/addmovie', async (req, res) => {
         const title = req.body.title;
         const director = req.body.director;
         const releaseYear = req.body.releaseYear;
+        const userId = req.user.id; // Get the user ID from the authenticated user
 
-        const movie = new Movie({
-            title,
-            director,
-            releaseYear
-        });
-        await movie.save();
-        res.redirect('/');
+        try {
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            const movie = new Movie({
+                title,
+                director,
+                releaseYear,
+                username: user.username,
+                userId: user._id
+            });
+
+            await movie.save();
+            res.redirect('/');
+        } catch (error) {
+            console.error('Error adding movie:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
     })
     .post('/login', async (req, res) => {
         // Handle user login

@@ -11,8 +11,11 @@ const userSchema = new Schema({
 const movieSchema = new Schema({
   title: { type: String, required: true },
   director: { type: String, required: true },
-  releaseYear: { type: Number, required: true }
-})
+  releaseYear: { type: Number, required: true },
+  username: { type: String, required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User' } // Add a reference to the user who added the movie
+});
+
 
 const User = mongoose.model('User', userSchema);
 const Movie = mongoose.model('Movie', movieSchema);
