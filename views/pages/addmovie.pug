@@ -1,0 +1,13 @@
+body
+
+header
+
+main
+    h1 Add movie
+    form#form_Login(action="/addmovie" method="post")
+        input#txt_title(type="text" name="title" placeholder="Movie title", required)
+        input#txt_director(type="text" name="director" placeholder="Director", required)
+        input#txt_releaseYear(type="number" name="releaseYear" placeholder='Release year', required)
+        input(type="submit" value="Add movie")
+
+footer

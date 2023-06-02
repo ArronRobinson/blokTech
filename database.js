@@ -28,10 +28,6 @@ async function connect() {
 
 module.exports = {
   User,
-  connect
-};
-
-module.exports = {
   Movie,
   connect
-}
+};

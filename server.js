@@ -11,6 +11,7 @@ dotenv.config();
 
 const {
     User,
+    Movie,
     connect
 } = require("./database");
 
@@ -44,12 +45,12 @@ app
     .get('/signup', (req, res) => {
         res.render('pages/signup');
     })
-    .get('/login', (req, res) => {
-        res.render('pages/login');
-    })
     .get('/logout', (req, res) => {
         res.clearCookie('jwt');
         res.redirect('/');
+    })
+    .get('/addmovie', (req, res) => {
+        res.render('pages/addmovie');
     })
     .post('/signup', async (req, res) => {
         // Handle user signup
@@ -70,6 +71,19 @@ app
             await user.save();
             res.redirect('/');
         });
+    })
+    .post ('/addmovie', async (req, res) => {
+        const title = req.body.title;
+        const director = req.body.director;
+        const releaseYear = req.body.releaseYear;
+
+        const movie = new Movie({
+            title,
+            director,
+            releaseYear
+        });
+        await movie.save();
+        res.redirect('/');
     })
     .post('/login', async (req, res) => {
         // Handle user login
