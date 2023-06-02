@@ -8,7 +8,14 @@ const userSchema = new Schema({
   password: { type: String, required: true }
 });
 
+const movieSchema = new Schema({
+  title: { type: String, required: true },
+  director: { type: String, required: true },
+  releaseYear: { type: Number, required: true }
+})
+
 const User = mongoose.model('User', userSchema);
+const Movie = mongoose.model('Movie', movieSchema);
 
 async function connect() {
   try {
@@ -23,3 +30,8 @@ module.exports = {
   User,
   connect
 };
+
+module.exports = {
+  Movie,
+  connect
+}

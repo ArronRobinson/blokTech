@@ -40,7 +40,6 @@ app.use((req, res, next) => {
 app
     .get('/', (req, res) => {
         res.render('pages', { title: 'home', user: req.user });
-        console.log(req.user)
     })
     .get('/signup', (req, res) => {
         res.render('pages/signup');
