@@ -39,8 +39,17 @@ app.use((req, res, next) => {
 
 // Routes
 app
-    .get('/', (req, res) => {
-        res.render('pages', { title: 'home', user: req.user });
+    .get('/', async (req, res) => {
+        try {
+            // Fetch all movies from the database
+            const movies = await Movie.find();
+
+            // Render the index page and pass the movies data to the template
+            res.render('pages/index', { title: 'home', user: req.user, movies });
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
     })
     .get('/signup', (req, res) => {
         res.render('pages/signup');
@@ -72,7 +81,7 @@ app
             res.redirect('/');
         });
     })
-    .post ('/addmovie', async (req, res) => {
+    .post('/addmovie', async (req, res) => {
         const title = req.body.title;
         const director = req.body.director;
         const releaseYear = req.body.releaseYear;
@@ -91,7 +100,7 @@ app
             const usernameOrEmail = req.body.username;
             const plainPassword = req.body.password;
             const user = await User.findOne({
-                  $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] 
+                $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
             });
             if (!user) {
                 return res.json({ message: 'who dis?' });

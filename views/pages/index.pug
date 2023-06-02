@@ -17,3 +17,13 @@ html
                 p Watched anything good lately?
                 a(href="/addmovie")
                     button(type= "button") Add movie
+                // Display the movies
+            if movies.length > 0
+                ul
+                    each movie in movies
+                        li
+                            h3= movie.title
+                            p Director: #{movie.director}
+                            p Release Year: #{movie.releaseYear}
+            else
+                p No movies found.
