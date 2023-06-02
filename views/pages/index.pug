@@ -2,8 +2,15 @@ html
     head
         title= title
     body 
-        include ../partials/header.pug
-        if !user
-            h1 Hello, log in or sign up to creat a new account!
-        else
-            h1 Hello there #{user.username}
+        header 
+            include ../partials/header.pug
+        main 
+            if !user
+                h1 Hello, log in or sign up to create a new account!
+                h1 Log in
+                form#form_Login(action="/login" method="post")
+                    input#txt_username(type="text" name="username" placeholder="Username or Email", required)
+                    input#txt_password(type="password" name="password" placeholder="your password", required)
+                    input(type="submit" value="Log in")
+            else
+                h1 Hello there #{user.username}

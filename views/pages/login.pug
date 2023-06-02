@@ -3,7 +3,7 @@ include ../partials/header.pug
 main
     h1 Log in
     form#form_Login(action="/login", method="post")
-        input#txt_firstname(type="text", name="username", placeholder="Username or Email", required)
+        input#txt_username(type="text", name="username", placeholder="Username or Email", required)
         input#txt_password(type="password", name="password", placeholder="your password", required)
         input(type="submit", value="Log in")
 

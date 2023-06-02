@@ -28,7 +28,7 @@ app.use((req, res, next) => {
     }
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
-            return res.status(401).json({ error: 'nooooo' });
+            return res.status(401).json({ error: 'no' });
         }
 
         req.user = decoded;
@@ -39,7 +39,8 @@ app.use((req, res, next) => {
 // Routes
 app
     .get('/', (req, res) => {
-        res.render('pages', { title: 'Hey', message: 'Hello there!', user: req.user });
+        res.render('pages', { title: 'home', user: req.user });
+        console.log(req.user)
     })
     .get('/signup', (req, res) => {
         res.render('pages/signup');
@@ -49,7 +50,7 @@ app
     })
     .get('/logout', (req, res) => {
         res.clearCookie('jwt');
-        res.redirect('/login');
+        res.redirect('/');
     })
     .post('/signup', async (req, res) => {
         // Handle user signup
@@ -77,14 +78,14 @@ app
             const usernameOrEmail = req.body.username;
             const plainPassword = req.body.password;
             const user = await User.findOne({
-                $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+                  $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] 
             });
             if (!user) {
                 return res.json({ message: 'who dis?' });
             }
             const correctPassword = await bcrypt.compare(plainPassword, user.password);
             if (correctPassword) {
-                const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+                const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 res.cookie('jwt', token, { httpOnly: true });
                 res.redirect('/');
             } else {
