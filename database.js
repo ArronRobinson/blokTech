@@ -13,7 +13,7 @@ const movieSchema = new Schema({
   director: { type: String, required: true },
   releaseYear: { type: Number, required: true },
   username: { type: String, required: true },
-  userId: { type: Schema.Types.ObjectId, ref: 'User' } // Add a reference to the user who added the movie
+  rating: { type: Number, min: 1, max: 5}
 });
 
 

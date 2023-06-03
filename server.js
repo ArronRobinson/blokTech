@@ -20,6 +20,7 @@ app.set('view engine', 'pug');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static('public'));
 
 // Middleware to handle user authentication
 app.use((req, res, next) => {
@@ -99,7 +100,8 @@ app
         const title = req.body.title;
         const director = req.body.director;
         const releaseYear = req.body.releaseYear;
-        const userId = req.user.id; // Get the user ID from the authenticated user
+        const rating = req.body.rating;
+        const userId = req.user.id;
 
         try {
             const user = await User.findById(userId);
@@ -111,8 +113,8 @@ app
                 title,
                 director,
                 releaseYear,
-                username: user.username,
-                userId: user._id
+                rating,
+                username: user.username
             });
 
             await movie.save();
@@ -146,8 +148,9 @@ app
             res.status(500).json({ error: 'Internal server error' });
         }
     })
+
     .use((req, res) => {
         // 404 page
-        res.status(404).sendFile(__dirname + '/views/pages/404.pug');
+        res.status(404).render('pages/404');
     })
     .listen(port);
