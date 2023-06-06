@@ -19,6 +19,7 @@ connect();
 app.set('view engine', 'pug');
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 app.use(cookieParser());
 app.use(express.static('public'));
 
@@ -37,6 +38,24 @@ app.use((req, res, next) => {
         next();
     });
 });
+
+async function getWatchlistMovies(userId) {
+    try {
+      // Connect to the MongoDB  
+      // Find the user by email and populate the watchlist field with movie details
+      const user = await User.findById(userId).populate('watchlist');
+  
+      if (!user) {
+        throw new Error('User not found');
+      }
+  
+      // Return the movies in the user's watchlist
+      return user.watchlist;
+    } catch (error) {
+      console.error('Error retrieving watchlist movies:', error);
+      throw error;
+    }
+  }
 
 // Routes
 app
@@ -59,21 +78,25 @@ app
     .get('/addmovie', (req, res) => {
         res.render('pages/addmovie');
     })
+    .get('/list', async (req, res) => {
+        const watchlistMovies = await getWatchlistMovies(req.user.id)
+        res.render('pages/list', { watchlistMovies });
+    })
     .post('/signup', async (req, res) => {
         // Handle user signup
         const email = req.body.email;
         const plainPassword = req.body.password;
         const username = req.body.username;
-    
+
         try {
             const existingUser = await User.findOne({
                 $or: [{ email: email }, { username: username }]
             });
-    
+
             if (existingUser) {
                 return res.json({ message: 'User already exists' });
             }
-    
+
             bcrypt.hash(plainPassword, 10, async (err, hashedPassword) => {
                 if (err) {
                     console.error('Error hashing password:', err);
@@ -84,9 +107,9 @@ app
                     username,
                     password: hashedPassword
                 });
-    
+
                 await user.save();
-    
+
                 const token = jwt.sign({ id: user._id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 res.cookie('jwt', token, { httpOnly: true });
                 res.redirect('/');
@@ -148,7 +171,35 @@ app
             res.status(500).json({ error: 'Internal server error' });
         }
     })
+    .post('/list', async (req, res) => {
+        const movieId = req.body.movieId;
+        const userId = req.user.id;
 
+        console.log({
+            movieId, userId
+        })
+
+        try {
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            const movie = await Movie.findById(movieId);
+            if (!movie) {
+                return res.status(404).json({ error: 'Movie not found' });
+            }
+
+            user.watchlist.push(movie);
+            // user.watchlist = [ ...user.watchlist, movie]
+            await user.save();
+
+            res.sendStatus(200); // Send a success status code
+        } catch (error) {
+            console.error('Error adding movie to watchlist:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    })
     .use((req, res) => {
         // 404 page
         res.status(404).render('pages/404');

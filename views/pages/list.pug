@@ -1,0 +1,18 @@
+body
+header
+    include ../partials/header.pug
+main
+    if watchlistMovies && watchlistMovies.length > 0
+        h2 Watchlist Movies
+            ul
+                each movie in watchlistMovies
+                    li
+                        h3= movie.title
+                        p Director: #{movie.director}
+                        p Release Year: #{movie.releaseYear}
+                        // Display other movie details as needed
+    else
+    p No movies in watchlist.
+
+
+footer 
