@@ -1,75 +1,89 @@
-head
-    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
-    link(rel="stylesheet" href="style/index.css")
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Movie App
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet", href="style/index.css")
+  body
+    header
+      // Include header content here
+      include ../partials/header.pug
+    main
+      // Check if user is logged in
+      if !user
+        h1 Hello, log in or sign up to create a new account!
+        section.login
+          h2 Log in
+          form#form_Login(action="/login", method="post")
+            input#txt_username(type="text", name="username", placeholder="Username or Email", required)
+            input#txt_password(type="password", name="password", placeholder="Your password", required)
+            input(type="submit", value="Log in")
+      else
+        h1 Hello there #{user.username}
+        div.addmovie
+          p Watched anything good lately?
+          a(href="/addmovie")
+            button(type="button") Add movie
+      // Check if movies exist
+      if movies.length > 0
+        ul.movies
+          each movie in movies
+            li
+              div.details
+                h3= movie.title
+                p Director: #{movie.director}
+                p Release Year: #{movie.releaseYear}
+                if movie.rating
+                  .rating
+                    each i in [1, 2, 3, 4, 5]
+                      if i <= movie.rating
+                        i.fa.fa-star.checked
+                      else
+                        i.fa.fa-star
+                else
+                  p No rating
+                p Added by: #{movie.username}
+                button.add-to-watchlist(type="button", data-movie-id=movie._id) Add to Watchlist
+      else
+        p No movies found.
+      div#poster-container
+        ul
+          // Poster container content here
 
-    title= title
-body 
-    header 
-        include ../partials/header.pug
-    main 
-        if !user
-            h1 Hello, log in or sign up to create a new account!
-            h1 Log in
-            form#form_Login(action="/login" method="post")
-                input#txt_username(type="text" name="username" placeholder="Username or Email" required)
-                input#txt_password(type="password" name="password" placeholder="Your password" required)
-                input(type="submit" value="Log in")
-        else
-            h1 Hello there #{user.username}
-            p Watched anything good lately?
-            a(href="/addmovie")
-                button(type="button") Add movie
-
-        if movies.length > 0
-            ul
-                each movie in movies
-                    li
-                        h3= movie.title
-                        p Director: #{movie.director}
-                        p Release Year: #{movie.releaseYear}
-                        if movie.rating
-                            .rating
-                                each i in [1, 2, 3, 4, 5]
-                                    if i <= movie.rating
-                                        i.fa.fa-star.checked
-                                    else
-                                        i.fa.fa-star
-                        else
-                            p No rating
-                        p Added by: #{movie.username}
-                        button(class="add-to-watchlist" data-movie-id=movie._id)
-                            span Add to Watchlist
-        else
-            p No movies found.
-
-script.
-    const addToWatchlistButtons = document.querySelectorAll('.add-to-watchlist');
-    addToWatchlistButtons.forEach(button => {
-        button.addEventListener('click', async (event) => {
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js")
+    script(src="/js/api.js")
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        const addToWatchlistButtons = document.querySelectorAll('.add-to-watchlist');
+        addToWatchlistButtons.forEach((button) => {
+          button.addEventListener('click', async (event) => {
             event.preventDefault();
             const movieId = button.getAttribute('data-movie-id');
 
             try {
-                const response = await fetch('/list', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ movieId }),
-                });
+              const response = await fetch('/list', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ movieId }),
+              });
 
-                if (response.ok) {
-                    // Movie added to watchlist successfully
-                    alert('Movie added to watchlist!');
-                    window.location.reload(); // Refresh the page
-                } else {
-                    // Handle error
-                    const errorData = await response.json();
-                    alert(errorData.error);
-                }
+              if (response.ok) {
+                // Movie added to watchlist successfully
+                alert('Movie added to watchlist!');
+                window.location.reload(); // Refresh the page
+              } else {
+                // Handle error
+                const errorData = await response.json();
+                alert(errorData.error);
+              }
             } catch (error) {
-                console.error('Error adding movie to watchlist:', error);
-                alert('An error occurred while adding the movie to the watchlist.');
+              console.error('Error adding movie to watchlist:', error);
+              alert('An error occurred while adding the movie to the watchlist.');
             }
+          });
         });
-    });
+      });

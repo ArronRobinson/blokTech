@@ -200,6 +200,7 @@ app
             res.status(500).json({ error: 'Internal server error' });
         }
     })
+    
     .use((req, res) => {
         // 404 page
         res.status(404).render('pages/404');

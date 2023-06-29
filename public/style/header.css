@@ -1,0 +1,16 @@
+.navbar {
+    list-style-type: none;
+    background-color: rgb(127, 127, 243);
+    padding: 1em;
+}
+
+.navbar li {
+    display: inline;
+}
+
+.navbar li a {
+    color: white;
+    font-size: 1.5em;
+    text-decoration: none;
+    padding-left: 1em;
+}
