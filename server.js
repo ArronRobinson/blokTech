@@ -19,11 +19,11 @@ connect();
 app.set('view engine', 'pug');
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static('public'));
 
-// Middleware to handle user authentication
+// Middleware om gebruikersauthenticatie af te handelen
 app.use((req, res, next) => {
     const token = req.cookies.jwt;
     if (!token) {
@@ -39,23 +39,24 @@ app.use((req, res, next) => {
     });
 });
 
+// Functie om films op te halen van de watchlist van een gebruiker
 async function getWatchlistMovies(userId) {
     try {
-      // Connect to the MongoDB  
-      // Find the user by email and populate the watchlist field with movie details
-      const user = await User.findById(userId).populate('watchlist');
-  
-      if (!user) {
-        throw new Error('User not found');
-      }
-  
-      // Return the movies in the user's watchlist
-      return user.watchlist;
+        // Verbinding maken met de MongoDB
+        // Zoek de gebruiker op basis van het ID en haal de filmgegevens op voor de watchlist
+        const user = await User.findById(userId).populate('watchlist');
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Geef de films in de watchlist van de gebruiker terug
+        return user.watchlist;
     } catch (error) {
-      console.error('Error retrieving watchlist movies:', error);
-      throw error;
+        console.error('Error retrieving watchlist movies:', error);
+        throw error;
     }
-  }
+}
 
 // Routes
 app
@@ -79,11 +80,11 @@ app
         res.render('pages/addmovie');
     })
     .get('/list', async (req, res) => {
-        const watchlistMovies = await getWatchlistMovies(req.user.id)
+        const watchlistMovies = await getWatchlistMovies(req.user.id);
         res.render('pages/list', { watchlistMovies });
     })
     .post('/signup', async (req, res) => {
-        // Handle user signup
+        // Gebruikersregistratie afhandelen
         const email = req.body.email;
         const plainPassword = req.body.password;
         const username = req.body.username;
@@ -148,7 +149,7 @@ app
         }
     })
     .post('/login', async (req, res) => {
-        // Handle user login
+        // Gebruikersaanmelding afhandelen
         try {
             const usernameOrEmail = req.body.username;
             const plainPassword = req.body.password;
@@ -177,7 +178,7 @@ app
 
         console.log({
             movieId, userId
-        })
+        });
 
         try {
             const user = await User.findById(userId);
@@ -194,15 +195,14 @@ app
             // user.watchlist = [ ...user.watchlist, movie]
             await user.save();
 
-            res.sendStatus(200); // Send a success status code
+            res.sendStatus(200); // Stuur een successtatuscode
         } catch (error) {
             console.error('Error adding movie to watchlist:', error);
             res.status(500).json({ error: 'Internal server error' });
         }
     })
-    
     .use((req, res) => {
-        // 404 page
+        // 404-pagina
         res.status(404).render('pages/404');
     })
     .listen(port);

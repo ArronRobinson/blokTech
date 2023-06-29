@@ -1,105 +1,120 @@
-*{
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: white;
+/* Global styles */
+* {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: white;
+}
+
+/* Font fallback */
+@font-face {
+  font-family: "FallbackFont";
+  src: local("Arial"), local("sans-serif");
+}
+
+/* Body styles */
+body, header, h1, p {
+  font-family: "Arial", "FallbackFont", sans-serif;
 }
 
 body {
-    margin: 0;
-    background-color: rgb(43, 43, 43);
+  margin: 0;
+  background-color: rgb(43, 43, 43);
 }
 
+/* Login styles */
 .login {
-    background-color: rgb(127, 127, 243);
-    border-radius: 1em;
-    margin-left: 30%;
-    margin-right: 30%;
+  background-color: rgb(127, 127, 243);
+  border-radius: 1em;
+  margin-left: 30%;
+  margin-right: 30%;
 }
 
 .login h2 {
-    padding-top: 1em;
+  padding-top: 1em;
 }
 
 .login form {
-    padding-bottom: 2em;
+  padding-bottom: 2em;
 }
 
 .login input {
-    color: black;
+  color: black;
 }
 
+/* Main styles */
 main h1 {
-    text-align: center;
-    padding-bottom: 2em;
-    padding-top: 2em;
+  text-align: center;
+  padding-bottom: 2em;
+  padding-top: 2em;
 }
 
 main h2 {
-    text-align: center;
+  text-align: center;
 }
 
 main form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 main form input {
-    width: 20em;
-    height: 3em;
-    color: black;
+  width: 20em;
+  height: 3em;
+  color: black;
 }
+
 .addmovie {
-    background-color: rgb(127, 127, 243);
-    margin-right: 60em;
-    padding-left: 3em;
-    border-radius: 0 1em 1em 0;
+  background-color: rgb(127, 127, 243);
+  margin-right: 60em;
+  padding-left: 3em;
+  border-radius: 0 1em 1em 0;
 }
 
 .addmovie p {
-    padding-top: 1em;
-    font-size: 2em;
+  padding-top: 1em;
+  font-size: 2em;
 }
 
 .addmovie button {
-    color: black;
-    margin-bottom: 1em;
-    font-size: 2em;
+  color: black;
+  margin-bottom: 1em;
+  font-size: 2em;
 }
 
 main form {
-    text-align: center;
+  text-align: center;
 }
 
 .add-to-watchlist {
-    margin-bottom: 2em;
-    color: black;
-    font-size: 1.5em;
+  margin-bottom: 2em;
+  color: black;
+  font-size: 1.5em;
 }
 
 .details {
-    border: solid black 2px;
-    background-color: rgb(41, 41, 53);
+  border: solid black 2px;
+  background-color: rgb(41, 41, 53);
 }
 
 .details h3 {
-    font-size: 2em;
+  font-size: 2em;
 }
 
 .movies {
-    padding: 2em;
-    text-align: center;
-    list-style-type: none;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
+  padding: 2em;
+  text-align: center;
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
 }
 
 .checked {
-    color: gold;
+  color: gold;
 }
 
 .watchlist ul {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  list-style-type: none;
 }

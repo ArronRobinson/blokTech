@@ -1,5 +1,6 @@
+/* Body styles */
 body {
     margin: 0;
     height: 100%;
-    background: #000 url("../images/404star.jpg") no-repeat  fixed center;
-}
+    background: #000 url("../images/404star.jpg") no-repeat fixed center;
+  }  

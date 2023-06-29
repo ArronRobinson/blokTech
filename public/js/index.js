@@ -1,10 +1,13 @@
 const addToWatchlistButtons = document.querySelectorAll('.add-to-watchlist');
+
+// Itereer over elk "Add to Watchlist" -knop-element en voeg een klikgebeurtenisluisteraar toe
 addToWatchlistButtons.forEach(button => {
   button.addEventListener('click', async (event) => {
     event.preventDefault();
     const movieId = button.getAttribute('data-movie-id');
 
     try {
+      // Stuur een POST-verzoek naar de "/list" -route om de film aan de watchlist toe te voegen
       const response = await fetch('/list', {
         method: 'POST',
         headers: {
@@ -14,11 +17,11 @@ addToWatchlistButtons.forEach(button => {
       });
 
       if (response.ok) {
-        // Movie added to watchlist successfully
+        // Film succesvol toegevoegd aan de watchlist
         alert('Movie added to watchlist!');
-        window.location.reload(); // Refresh the page
+        window.location.reload(); // Vernieuw de pagina
       } else {
-        // Handle error
+        // Behandel de fout
         const errorData = await response.json();
         alert(errorData.error);
       }
@@ -27,4 +30,10 @@ addToWatchlistButtons.forEach(button => {
       alert('An error occurred while adding the movie to the watchlist.');
     }
   });
+});
+
+//progressive enhancement
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("javascript-disabled").style.display = "none";
 });

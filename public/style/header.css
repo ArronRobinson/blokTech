@@ -1,16 +1,18 @@
+/* Navbar styles */
 .navbar {
     list-style-type: none;
     background-color: rgb(127, 127, 243);
     padding: 1em;
-}
-
-.navbar li {
+  }
+  
+  .navbar li {
     display: inline;
-}
-
-.navbar li a {
-    color: white;
+  }
+  
+  .navbar li a {
+    color: rgb(255, 255, 255);
     font-size: 1.5em;
     text-decoration: none;
     padding-left: 1em;
-}
+  }
+  
